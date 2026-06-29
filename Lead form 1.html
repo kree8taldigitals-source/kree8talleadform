@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Get Qualified — Kree8tal Digitals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink:    #0C1A0F;
+    --forest: #0E3018;
+    --leaf:   #A8D833;
+    --white:  #F5F9EE;
+    --mist:   #D6E8BE;
+    --smoke:  #8FA87A;
+    --orange: #D4530A;
+    --border: rgba(168,216,51,0.18);
+    --card:   rgba(14,48,24,0.7);
+    --r:      10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--ink);
+    color: var(--white);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* noise */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(12,26,15,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; letter-spacing: 0.1em; color: var(--leaf);
+  }
+  .header-tag {
+    font-size: 0.75rem; color: var(--smoke);
+    background: rgba(168,216,51,0.08);
+    border: 1px solid var(--border);
+    border-radius: 99px; padding: 0.3rem 0.9rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── HERO STRIP ── */
+  .hero-strip {
+    background: linear-gradient(135deg, var(--forest) 0%, #071509 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-strip::before {
+    content: '';
+    position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse, rgba(168,216,51,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-strip .eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(168,216,51,0.1); border: 1px solid var(--border);
+    border-radius: 99px; padding: 0.3rem 1rem;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--leaf); margin-bottom: 1rem;
+  }
+  .dot { width: 6px; height: 6px; background: var(--leaf); border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero-strip h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    letter-spacing: 0.03em; line-height: 1; color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .hero-strip h1 span { color: var(--leaf); }
+  .hero-strip p {
+    font-size: 1rem; color: var(--mist); max-width: 520px;
+    margin: 0 auto; line-height: 1.65;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    max-width: 680px; margin: 0 auto;
+    padding: 1.8rem 1.5rem 0;
+  }
+  .progress-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .progress-label { font-size: 0.75rem; color: var(--smoke); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .progress-count { font-size: 0.75rem; color: var(--leaf); font-weight: 700; }
+  .progress-track {
+    height: 5px; background: rgba(255,255,255,0.07); border-radius: 99px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--leaf); border-radius: 99px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* ── FORM SHELL ── */
+  .form-shell {
+    max-width: 680px; margin: 0 auto;
+    padding: 1.5rem 1.5rem 4rem;
+    position: relative; z-index: 1;
+  }
+
+  /* ── STEP ── */
+  .step { display: none; animation: fadeUp 0.3s ease; }
+  .step.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION LABEL ── */
+  .step-num {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--leaf);
+    margin-bottom: 0.3rem;
+  }
+  .step-title {
+    font-size: 1.15rem; font-weight: 700; color: var(--white);
+    margin-bottom: 1.4rem; line-height: 1.35;
+  }
+
+  /* ── FIELD ── */
+  .field { margin-bottom: 1.1rem; }
+  .field label {
+    display: block; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--smoke); margin-bottom: 0.45rem;
+  }
+  .field input, .field textarea, .field select {
+    width: 100%;
+    background: rgba(14,48,24,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--r);
+    padding: 0.85rem 1.1rem;
+    font-size: 0.95rem; color: var(--white);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(143,168,122,0.45); }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--leaf);
+    box-shadow: 0 0 0 3px rgba(168,216,51,0.1);
+  }
+  .field input.error, .field textarea.error { border-color: var(--orange); }
+  .field .err-msg {
+    font-size: 0.75rem; color: var(--orange);
+    margin-top: 0.3rem; display: none;
+  }
+  .field input.error + .err-msg,
+  .field textarea.error + .err-msg { display: block; }
+  .field.optional label::after {
+    content: ' — optional'; font-weight: 400; color: rgba(143,168,122,0.5);
+  }
+  .field textarea { resize: vertical; min-height: 100px; }
+
+  /* ── FIELD GRID ── */
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+
+  /* ── RADIO / CHOICE CARDS ── */
+  .choices { display: flex; flex-direction: column; gap: 0.55rem; }
+  .choices.two-col { display: grid; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 480px) { .choices.two-col { grid-template-columns: 1fr; } }
+
+  .choice-label {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--r); padding: 0.9rem 1.1rem;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    font-size: 0.9rem; color: var(--mist);
+    user-select: none;
+  }
+  .choice-label:hover {
+    border-color: rgba(168,216,51,0.35);
+    background: rgba(14,48,24,0.9);
+  }
+  .choice-label input[type="radio"] { display: none; }
+  .choice-label input[type="radio"]:checked ~ .choice-text { color: var(--white); font-weight: 600; }
+  .choice-label:has(input:checked) {
+    border-color: var(--leaf);
+    background: rgba(168,216,51,0.08);
+  }
+  .radio-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: border-color 0.15s;
+  }
+  .choice-label:has(input:checked) .radio-dot {
+    border-color: var(--leaf); background: rgba(168,216,51,0.15);
+  }
+  .radio-dot::after {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--leaf); display: none;
+  }
+  .choice-label:has(input:checked) .radio-dot::after { display: block; }
+  .choice-icon { font-size: 1.05rem; }
+
+  /* ── NAVIGATION BUTTONS ── */
+  .nav-buttons {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 2rem; gap: 1rem;
+  }
+  .btn-back {
+    background: transparent; border: 1px solid rgba(255,255,255,0.12);
+    color: var(--smoke); border-radius: var(--r); padding: 0.8rem 1.5rem;
+    font-size: 0.88rem; font-weight: 600; font-family: 'Inter', sans-serif;
+    cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-back:hover { border-color: var(--smoke); color: var(--mist); }
+  .btn-back:disabled { opacity: 0.3; pointer-events: none; }
+  .btn-next {
+    background: var(--leaf); color: var(--ink);
+    border: none; border-radius: var(--r); padding: 0.9rem 2rem;
+    font-size: 0.95rem; font-weight: 700; font-family: 'Inter', sans-serif;
+    cursor: pointer; transition: opacity 0.15s, transform 0.15s;
+    display: flex; align-items: center; gap: 8px; margin-left: auto;
+    box-shadow: 0 4px 20px rgba(168,216,51,0.2);
+  }
+  .btn-next:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    border: none; border-top: 1px solid rgba(255,255,255,0.07);
+    margin: 1.8rem 0;
+  }
+
+  /* ── SUCCESS SCREEN ── */
+  #success-screen {
+    display: none;
+    max-width: 560px; margin: 3rem auto; padding: 1.5rem;
+    text-align: center;
+  }
+  .success-icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba(168,216,51,0.12); border: 2px solid var(--leaf);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; margin: 0 auto 1.5rem;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  #success-screen h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; letter-spacing: 0.04em; color: var(--white); margin-bottom: 0.5rem;
+  }
+  #success-screen h2 span { color: var(--leaf); }
+  #success-screen p { font-size: 0.95rem; color: var(--mist); line-height: 1.65; max-width: 420px; margin: 0 auto 2rem; }
+  .success-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--leaf); color: var(--ink);
+    font-weight: 700; font-size: 0.95rem;
+    padding: 0.95rem 2rem; border-radius: var(--r);
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(168,216,51,0.25);
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .success-cta:hover { opacity: 0.88; transform: translateY(-2px); }
+  .success-meta {
+    font-size: 0.78rem; color: var(--smoke); margin-top: 1.2rem;
+  }
+
+  /* ── TRUST ROW ── */
+  .trust-row {
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 1.5rem; padding: 1.5rem 1.5rem 2.5rem; max-width: 680px; margin: 0 auto;
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.75rem; color: var(--smoke);
+  }
+  .trust-icon { font-size: 0.9rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 1.5rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.75rem;
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.1em; color: var(--leaf); }
+  .footer-copy { font-size: 0.75rem; color: var(--smoke); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">KREE8TAL DIGITALS</span>
+  <span class="header-tag">Lead Qualification</span>
+</header>
+
+<div class="hero-strip">
+  <div class="eyebrow"><div class="dot"></div> Takes less than 3 minutes</div>
+  <h1>Let's See If We're A <span>Good Fit</span></h1>
+  <p>Answer a few quick questions so we can understand your business and come to the call fully prepared to help you.</p>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-header">
+    <span class="progress-label">Your progress</span>
+    <span class="progress-count" id="prog-count">Step 1 of 4</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<div class="form-shell" id="form-shell">
+
+  <div class="step active" id="step-1">
+    <p class="step-num">Step 1 of 4 — Contact Details</p>
+    <p class="step-title">First, let's get to know you</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" placeholder="Jane Doe" autocomplete="name" />
+        <span class="err-msg">Please enter your full name</span>
+      </div>
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="jane@example.com" autocomplete="email" />
+        <span class="err-msg">Please enter a valid email</span>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="+234 800 000 0000" autocomplete="tel" />
+        <span class="err-msg">Please enter your phone number</span>
+      </div>
+      <div class="field optional">
+        <label for="website">Website</label>
+        <input type="url" id="website" placeholder="https://yourbusiness.com" />
+      </div>
+    </div>
+    <div class="field">
+      <label for="service">What service or product do you offer?</label>
+      <input type="text" id="service" placeholder="e.g. Real estate, coaching, e-commerce, skincare…" />
+      <span class="err-msg">Please describe what you offer</span>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" disabled>← Back</button>
+      <button class="btn-next" onclick="goNext(1)">Continue →</button>
+    </div>
+  </div>
+
+  <div class="step" id="step-2">
+    <p class="step-num">Step 2 of 4 — Business Snapshot</p>
+    <p class="step-title">Tell us about your business today</p>
+
+    <div class="field">
+      <label>What is your current monthly revenue?</label>
+      <div class="choices">
+        <label class="choice-label"><input type="radio" name="revenue" value="Under $5,000"/><div class="radio-dot"></div><span class="choice-icon">💼</span><span class="choice-text">Under $5,000</span></label>
+        <label class="choice-label"><input type="radio" name="revenue" value="$5,000–$10,000"/><div class="radio-dot"></div><span class="choice-icon">📈</span><span class="choice-text">$5,000 – $10,000</span></label>
+        <label class="choice-label"><input type="radio" name="revenue" value="$10,000–$25,000"/><div class="radio-dot"></div><span class="choice-icon">🚀</span><span class="choice-text">$10,000 – $25,000</span></label>
+        <label class="choice-label"><input type="radio" name="revenue" value="$25,000–$50,000"/><div class="radio-dot"></div><span class="choice-icon">🔥</span><span class="choice-text">$25,000 – $50,000</span></label>
+        <label class="choice-label"><input type="radio" name="revenue" value="$50,000+"/><div class="radio-dot"></div><span class="choice-icon">💰</span><span class="choice-text">$50,000+</span></label>
+      </div>
+      <p class="err-msg" id="err-revenue" style="display:none; color: var(--orange); font-size:0.75rem; margin-top:0.4rem;">Please select your revenue range</p>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="field">
+      <label>What is your biggest challenge right now?</label>
+      <textarea id="challenge" placeholder="e.g. I'm spending on ads but getting no qualified leads. My CPL keeps rising and I'm not sure why…"></textarea>
+      <span class="err-msg">Please share your biggest challenge</span>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" onclick="goBack(2)">← Back</button>
+      <button class="btn-next" onclick="goNext(2)">Continue →</button>
+    </div>
+  </div>
+
+  <div class="step" id="step-3">
+    <p class="step-num">Step 3 of 4 — Ads & Budget</p>
+    <p class="step-title">Let's talk about your marketing</p>
+
+    <div class="field">
+      <label>Do you currently run ads for your business?</label>
+      <div class="choices two-col">
+        <label class="choice-label"><input type="radio" name="runs_ads" value="Yes"/><div class="radio-dot"></div><span class="choice-icon">✅</span><span class="choice-text">Yes, I run ads</span></label>
+        <label class="choice-label"><input type="radio" name="runs_ads" value="No"/><div class="radio-dot"></div><span class="choice-icon">❌</span><span class="choice-text">No, not yet</span></label>
+      </div>
+      <p class="err-msg" id="err-ads" style="display:none; color: var(--orange); font-size:0.75rem; margin-top:0.4rem;">Please select an option</p>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="field">
+      <label>What's your monthly marketing budget?</label>
+      <div class="choices">
+        <label class="choice-label"><input type="radio" name="budget" value="Under $500"/><div class="radio-dot"></div><span class="choice-icon">🌱</span><span class="choice-text">Under $500</span></label>
+        <label class="choice-label"><input type="radio" name="budget" value="$500–$2,000"/><div class="radio-dot"></div><span class="choice-icon">📊</span><span class="choice-text">$500 – $2,000</span></label>
+        <label class="choice-label"><input type="radio" name="budget" value="$2,000–$5,000"/><div class="radio-dot"></div><span class="choice-icon">💪</span><span class="choice-text">$2,000 – $5,000</span></label>
+        <label class="choice-label"><input type="radio" name="budget" value="$5,000+"/><div class="radio-dot"></div><span class="choice-icon">🏆</span><span class="choice-text">$5,000+</span></label>
+      </div>
+      <p class="err-msg" id="err-budget" style="display:none; color: var(--orange); font-size:0.75rem; margin-top:0.4rem;">Please select your budget range</p>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" onclick="goBack(3)">← Back</button>
+      <button class="btn-next" onclick="goNext(3)">Continue →</button>
+    </div>
+  </div>
+
+  <div class="step" id="step-4">
+    <p class="step-num">Step 4 of 4 — Intent & Fit</p>
+    <p class="step-title">Almost done — last two questions</p>
+
+    <div class="field">
+      <label>How soon are you looking to get started?</label>
+      <div class="choices">
+        <label class="choice-label"><input type="radio" name="timeline" value="ASAP"/><div class="radio-dot"></div><span class="choice-icon">⚡</span><span class="choice-text">ASAP — I'm ready now</span></label>
+        <label class="choice-label"><input type="radio" name="timeline" value="Within 30 Days"/><div class="radio-dot"></div><span class="choice-icon">📅</span><span class="choice-text">Within 30 Days</span></label>
+        <label class="choice-label"><input type="radio" name="timeline" value="Within 90 Days"/><div class="radio-dot"></div><span class="choice-icon">🗓️</span><span class="choice-text">Within 90 Days</span></label>
+        <label class="choice-label"><input type="radio" name="timeline" value="Just Exploring"/><div class="radio-dot"></div><span class="choice-icon">👀</span><span class="choice-text">Just Exploring for Now</span></label>
+      </div>
+      <p class="err-msg" id="err-timeline" style="display:none; color: var(--orange); font-size:0.75rem; margin-top:0.4rem;">Please select a timeline</p>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="field">
+      <label>If we showed you a system that could help you get consistent, qualified leads — would you be interested in professional implementation?</label>
+      <div class="choices" style="margin-top: 0.2rem;">
+        <label class="choice-label"><input type="radio" name="interested" value="Yes"/><div class="radio-dot"></div><span class="choice-icon">🙌</span><span class="choice-text">Yes — I'm serious about growing</span></label>
+        <label class="choice-label"><input type="radio" name="interested" value="Maybe"/><div class="radio-dot"></div><span class="choice-icon">🤔</span><span class="choice-text">Maybe — I need to learn more first</span></label>
+        <label class="choice-label"><input type="radio" name="interested" value="No"/><div class="radio-dot"></div><span class="choice-icon">🙅</span><span class="choice-text">No — I prefer to handle it myself</span></label>
+      </div>
+      <p class="err-msg" id="err-interested" style="display:none; color: var(--orange); font-size:0.75rem; margin-top:0.4rem;">Please select an option</p>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" onclick="goBack(4)">← Back</button>
+      <button class="btn-next" onclick="submitForm()" style="background: var(--leaf); padding: 0.95rem 2.2rem; font-size: 1rem;">
+        Submit Application ✓
+      </button>
+    </div>
+  </div>
+
+</div><div class="trust-row" id="trust-row">
+  <div class="trust-item"><span class="trust-icon">🔒</span> Your data is private & secure</div>
+  <div class="trust-item"><span class="trust-icon">⏱️</span> Takes less than 3 minutes</div>
+  <div class="trust-item"><span class="trust-icon">🚫</span> No spam, ever</div>
+  <div class="trust-item"><span class="trust-icon">📞</span> We'll reach out within 24hrs</div>
+</div>
+
+<div id="success-screen">
+  <div class="success-icon">🎯</div>
+  <h2>Application <span>Received!</span></h2>
+  <p>Thank you! We've received your details and will review your application within 24 hours. If you're a strong fit, we'll reach out to schedule a strategy call.</p>
+  <a href="https://growwithkree8tal.framer.website/landing-page" target="_blank" class="success-cta">Book Your Strategy Call →</a>
+  <p class="success-meta">Questions? Email us at <a href="mailto:kree8taldigitals@gmail.com" style="color: var(--leaf);">kree8taldigitals@gmail.com</a></p>
+</div>
+
+<footer>
+  <span class="footer-logo">KREE8TAL DIGITALS</span>
+  <span class="footer-copy">© 2025 Kree8tal Digitals · All rights reserved</span>
+</footer>
+
+<script>
+  const TOTAL = 4;
+  let currentStep = 1;
+
+  function updateProgress(step) {
+    const pct = ((step - 1) / TOTAL) * 100;
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-count').textContent = 'Step ' + step + ' of ' + TOTAL;
+  }
+
+  function scrollTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── VALIDATION ── */
+  function validateStep(step) {
+    let ok = true;
+
+    if (step === 1) {
+      const name = document.getElementById('fullname');
+      const email = document.getElementById('email');
+      const phone = document.getElementById('phone');
+      const service = document.getElementById('service');
+
+      if (!name.value.trim()) { name.classList.add('error'); ok = false; } else name.classList.remove('error');
+      if (!email.value.trim() || !email.value.includes('@')) { email.classList.add('error'); ok = false; } else email.classList.remove('error');
+      if (!phone.value.trim()) { phone.classList.add('error'); ok = false; } else phone.classList.remove('error');
+      if (!service.value.trim()) { service.classList.add('error'); ok = false; } else service.classList.remove('error');
+    }
+
+    if (step === 2) {
+      const rev = document.querySelector('input[name="revenue"]:checked');
+      const challenge = document.getElementById('challenge');
+      if (!rev) { document.getElementById('err-revenue').style.display = 'block'; ok = false; } else document.getElementById('err-revenue').style.display = 'none';
+      if (!challenge.value.trim()) { challenge.classList.add('error'); ok = false; } else challenge.classList.remove('error');
+    }
+
+    if (step === 3) {
+      const ads = document.querySelector('input[name="runs_ads"]:checked');
+      const budget = document.querySelector('input[name="budget"]:checked');
+      if (!ads) { document.getElementById('err-ads').style.display = 'block'; ok = false; } else document.getElementById('err-ads').style.display = 'none';
+      if (!budget) { document.getElementById('err-budget').style.display = 'block'; ok = false; } else document.getElementById('err-budget').style.display = 'none';
+    }
+
+    if (step === 4) {
+      const timeline = document.querySelector('input[name="timeline"]:checked');
+      const interested = document.querySelector('input[name="interested"]:checked');
+      if (!timeline) { document.getElementById('err-timeline').style.display = 'block'; ok = false; } else document.getElementById('err-timeline').style.display = 'none';
+      if (!interested) { document.getElementById('err-interested').style.display = 'block'; ok = false; } else document.getElementById('err-interested').style.display = 'none';
+    }
+
+    return ok;
+  }
+
+  function goNext(step) {
+    if (!validateStep(step)) return;
+    document.getElementById('step-' + step).classList.remove('active');
+    currentStep = step + 1;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    updateProgress(currentStep);
+    scrollTop();
+  }
+
+  function goBack(step) {
+    document.getElementById('step-' + step).classList.remove('active');
+    currentStep = step - 1;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    updateProgress(currentStep);
+    scrollTop();
+  }
+
+  // ── NEW VALID APPS SCRIPT WEB APP URL ASSIGNED ──
+  const SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbxHalb-QqcSEz9WD3S2fOFCV8tWYVXw5MNdTeB1P3u6qwbgwBxvQrunJlqFT6KDkX0/exec';
+
+  async function submitForm() {
+    if (!validateStep(4)) return;
+
+    // Generate runtime parameters
+    const generatedUid = Math.random().toString(36).slice(2, 10);
+    const isoTimestamp = new Date().toISOString();
+
+    const data = {
+      id:          generatedUid,
+      fullName:    document.getElementById('fullname').value.trim(),
+      email:       document.getElementById('email').value.trim(),
+      phone:       document.getElementById('phone').value.trim(),
+      website:     document.getElementById('website').value.trim(),
+      service:     document.getElementById('service').value.trim(),
+      revenue:     document.querySelector('input[name="revenue"]:checked')?.value || '',
+      challenge:   document.getElementById('challenge').value.trim(),
+      runsAds:     document.querySelector('input[name="runs_ads"]:checked')?.value || '',
+      budget:      document.querySelector('input[name="budget"]:checked')?.value || '',
+      timeline:    document.querySelector('input[name="timeline"]:checked')?.value || '',
+      interested:  document.querySelector('input[name="interested"]:checked')?.value || '',
+      stage:       'New',
+      submittedAt: isoTimestamp
+    };
+
+    const btn = document.querySelector('#step-4 .btn-next');
+    if (btn) { btn.textContent = 'Submitting…'; btn.disabled = true; }
+
+    try {
+      if (SHEET_WEBHOOK && SHEET_WEBHOOK !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+        // Send as standard Form Data matching standard old script setups if JSON payload fails
+        const formData = new URLSearchParams();
+        Object.keys(data).forEach(key => formData.append(key, data[key]));
+
+        await fetch(SHEET_WEBHOOK, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString()
+        });
+      }
+
+      const crm = JSON.parse(localStorage.getItem('crm_leads') || '[]');
+      crm.unshift({
+        ...data,
+        notes: [],
+        activity: [{ ic: '📥', text: 'Submitted via website form', time: new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) }],
+        emails: [],
+        reminders: []
+      });
+      localStorage.setItem('crm_leads', JSON.stringify(crm));
+    } catch(err) {
+      console.warn('Submission error:', err);
+    }
+
+    document.getElementById('form-shell').style.display = 'none';
+    document.getElementById('trust-row').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    scrollTop();
+  }
+
+  // Init
+  updateProgress(1);
+
+  // Clear error states on input
+  document.querySelectorAll('input, textarea').forEach(el => {
+    el.addEventListener('input', () => el.classList.remove('error'));
+  });
+</script>
+</body>
+</html>
